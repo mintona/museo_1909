@@ -153,4 +153,46 @@ class CuratorTest < Minitest::Test
     assert_equal [], @curator.photographs_taken_by_artists_from("Argentina")
   end
 
+  def test_it_can_get_photographs_from_csv
+    assert_equal [], @curator.photographs
+
+    @curator.load_photographs('./data/photographs.csv')
+
+    assert_equal 4, @curator.photographs.length
+
+    assert_equal true, @curator.photographs.all? { |photo| photo.class == Photograph }
+
+  end
+
+  def test_it_can_get_artists_from_csv
+    assert_equal [], @curator.artists
+
+    @curator.load_artists('./data/artists.csv')
+
+    assert_equal 6, @curator.artists.length
+    assert_equal true, @curator.artists.all? { |artist| artist.class == Artist }
+  end
+
+  def test_it_can_get_photographs_taken_between_range_of_years
+    @curator.load_photographs('./data/photographs.csv')
+
+    photo_1 = @curator.photographs[0]
+    photo_4 = @curator.photographs[3]
+
+    assert_equal [photo_1, photo_4], @curator.photographs_taken_between(1950..1965)
+  end
+
+  def test_it_can_list_artists_photographs_by_age
+    @curator.load_photographs('./data/photographs.csv')
+    @curator.load_artists('./data/artists.csv')
+
+    diane_arbus = @curator.find_artist_by_id("3")
+
+    expected = {
+      44=>"Identical Twins, Roselle, New Jersey",
+      39=>"Child with Toy Hand Grenade in Central Park"
+    }
+
+    assert_equal expected, @curator.artists_photographs_by_age(diane_arbus)
+  end
 end
