@@ -160,7 +160,9 @@ class CuratorTest < Minitest::Test
 
     assert_equal 4, @curator.photographs.length
 
-    assert_equal true, @curator.photographs.all? { |photo| photo.class == Photograph }
+    expected = @curator.photographs.all? { |photo| photo.class == Photograph }
+
+    assert_equal true, expected
 
   end
 
@@ -170,7 +172,9 @@ class CuratorTest < Minitest::Test
     @curator.load_artists('./data/artists.csv')
 
     assert_equal 6, @curator.artists.length
-    assert_equal true, @curator.artists.all? { |artist| artist.class == Artist }
+
+    expected = @curator.artists.all? { |artist| artist.class == Artist }
+    assert_equal true, expected
   end
 
   def test_it_can_get_photographs_taken_between_range_of_years
